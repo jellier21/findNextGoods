@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>找下家</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/universal/logo.png">
+    <link rel="stylesheet" href="./css/Universal_style.css">
+    <link rel="stylesheet" href="./css/home.css">
+    <script src="./js/NavPerson_Style.js"></script>
+</head>
+
+<body>
+    <div class="topIndex">
+        <div class="brand_img">
+            <img src="./images/universal/logo.png" alt="有下家Logo">
+        </div>
+        <div class="IndexNav">
+            <div id="home">首页</div>
+            <div id="post">悬赏信息</div>
+            <div id="self-made">大神自制品</div>
+            <div id="search">
+                <input type="text" placeholder="请输入搜索内容" id="searchInput">
+                <button id="searchBtn">搜索</button>
+            </div>
+        </div>
+        <div id="AccountShow">
+            <div id="myPortrait">
+                <img src="./images/universal/initial.png" id="header-image" alt="头像">
+            </div>
+            <div id="myName">请登录</div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- <div id="filtrate">
+            <div id="synthesize"><span id="filtrate_title">综合</span></div>
+            <div id="New_Show"><span id="filtrate_title">新发布</span></div>
+            <div id="price"><span id="filtrate_title">价格</span></div>
+        </div> -->
+        <div id="HINT">
+            本页面为个人自制页面，请使用者注意个人信息安全，如非个人喜好尝试，请到正规二手平台。
+        </div>
+        <div id="showTheGoods">
+            <!-- /* 商品List展示 */ -->
+        </div>
+    </div>
+    <div id="add-my-goods">
+        <img src="./images/universal/add.png" alt="添加需求">
+    </div>
+    <div id="addmyGoodsArea">
+        <div id="send-image-Area">
+            <input type="file" id="send-image" accept="image/*">
+        </div>
+        <input type="text" id="send-title" placeholder="请输入商品名称">
+        <textarea id="send-introduce" name="introduce" cols="30" rows="10" placeholder="请输入商品描述"></textarea>
+        <input type="number" id="send-price" placeholder="请输入商品价格">
+        <div id="send-btn">发送</div>
+        <div id="cancel-btn">取消</div>
+    </div>
+    </div>
+    <script>
+        document.getElementById("add-my-goods").addEventListener('click', () => {
+            document.getElementById("addmyGoodsArea").style.display = "block";
+            document.getElementById("send-btn").addEventListener("click", async () => {
+                const fileInput = document.getElementById("send-image");
+                const imagefile = fileInput.files[0];
+                if (!imagefile) {
+                    alert("请上传图片！");
+                    return;
+                }
+
+                // 步骤1: 将图片转为 JPG Blob
+                let jpgBlob;
+                try {
+                    jpgBlob = await convertImageToJPG(imagefile);
+                } catch (e) {
+                    console.error("图片转换失败:", e);
+                    alert("图片转换失败，请重试！");
+                    return;
+                }
+
+                // 步骤2: 显示预览（可选，使用转换后的 JPG）
+                const preview = document.getElementById('send-image-Area');
+                const previewUrl = URL.createObjectURL(jpgBlob);
+                preview.innerHTML = `<img id="preview-img" src="${previewUrl}" alt="预览图片" style="max-width: 100%; max-height: 300px;">`;
+
+                // 步骤3: 准备 FormData（使用转换后的 jpgBlob）
+                const filename = Date.now() + "_" + account + "_good.jpg"; // 显式加 .jpg 后缀
+                const formData = new FormData();
+                formData.append('data', filename.replace('.jpg', '')); // 如果后端不需要扩展名可去掉
+                formData.append('image', jpgBlob, filename); // 指定文件名为 .jpg
+
+                try {
+                    // 上传图片
+                    const response = await fetch('http://localhost:8080/api/image/goods/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error('上传失败：' + response.statusText);
+                    const result = await response.json();
+                    console.log("上传成功，文件名:", result.filePath);
+
+                    // 发布需求（注意：这里 image 字段应与后端期望一致）
+                    let xh = new XMLHttpRequest();
+                    xh.open('POST', 'http://localhost:8080/api/goods/send', true);
+                    xh.setRequestHeader('Content-Type', 'application/json');
+                    xh.onreadystatechange = () => { 
+                        if (xh.readyState === 4) {
+                            if (xh.status === 200) {
+                                try {
+                                    var jsonDB = JSON.parse(xh.responseText);
+                                    if(jsonDB.success) {
+                                        alert("发布成功！");
+                                        document.getElementById("addmyGoodsArea").style.display = "none";
+                                        window.location.reload();
+                                    } else {
+                                        alert("发布失败：" + jsonDB.message);
+                                    }
+                                } catch (e) {
+                                    console.error("JSON 解析失败:", e);
+                                    console.log("响应内容:", xh.responseText);
+                                }
+                            } else {
+                                alert("自制 api 返回失败：" + xh.status);
+                                console.error("请求失败，状态码:", xh.status);
+                                console.log("响应内容:", xh.responseText);
+                            }
+                        }
+                    };
+
+                    let sandtype = 2; // 1 代表自制品
+
+                    // 获取并转换价格
+                    let priceValue = document.getElementById("send-price").value;
+                    let priceFloat = parseFloat(priceValue);
+                    if (isNaN(priceFloat)) {
+                        alert("请输入有效的价格");
+                        return;
+                    }
+
+                    xh.send(JSON.stringify({ 
+                        account: account,
+                        name: document.getElementById("send-title").value,
+                        description: document.getElementById("send-introduce").value,
+                        price: priceFloat,
+                        type: sandtype,
+                        image: filename.replace('.jpg', '')
+                    }));
+
+                } catch (error) {
+                    console.error("上传错误:", error);
+                    alert("图片上传失败！");
+                }
+
+            });
+        })
+        document.getElementById("cancel-btn").addEventListener('click', () => {
+            document.getElementById("addmyGoodsArea").style.display = "none";
+        })
+
+    </script>
+</body>
+
+</html>

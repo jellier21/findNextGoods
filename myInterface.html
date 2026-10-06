@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/universal/logo.png">
+    <link rel="stylesheet" href="./css/myInterface.css">
+    <title>我的个人界面</title>
+    <script src="./js/myInterface.js"></script>
+</head>
+<body>
+    <div id="uploadHeaderImage" style="display: none;">
+        <div id="uploadArea">
+            <input type="file" id="uploadImage" accept="image/*">
+        </div>
+        <div id="upload_s">更新</div>
+        <div id="cancel_s">取消</div>
+    </div>
+    <div class="container">
+        <div id="Nav-All">
+            <div id="logo">
+                <img src="./images/universal/logo.png" id="header" alt="logo">
+            </div>
+            <div id="item-issue">我的发布</div>
+            <div id="item-reward">我的悬赏</div>
+            <div id="item-contact">我的联系方式</div>
+            <div id="Quit">退出登录</div>
+        </div>
+        <div id="showArea">
+            <div id="show-issue">
+                <div id="issue-container">
+                   <!-- 我的发布 -->
+                </div>
+            </div>
+            <div id="show-reward">
+                <div id="reward-container">
+
+                    <!-- 我的悬赏 -->
+
+                </div>
+            </div>
+            <div id="show-contact">
+                <div id="contactArea">
+                    <div id="software">软件</div>
+                    <div id="account-Num">15194691234</div>
+                    <div id="change-account">
+                        <img src="./images/universal/amend.png" alt="修改">
+                    </div>
+                </div>
+                <div id="changeArea">
+                    <input type="text" id="newSoftware" placeholder="请输入新的联系软件">
+                    <input type="text" id="newAccountNum" placeholder="请输入新的账号">
+                    <button id="confirmChange">确认修改</button>
+                    <button id="cancelChange">取消修改</button>
+                </div>
+
+                <div class="hintArea">
+                    为了您的信息安全，建议您请勿将真实信息上传，请用心设置联系方式，请勿将日常联系方式上传以免打扰正常生活。
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="backHome">
+        <img src="./images/universal/back.png" alt="返回首页">
+    </div>
+    <script>
+        document.getElementById('Quit').addEventListener('click', () => {
+            localStorage.removeItem('userAccountNum');
+            localStorage.removeItem('userPassword');
+            location.replace('./homepage.html');
+        });
+        document.getElementById('backHome').addEventListener('click', () => {
+            location.replace('./homepage.html');
+        });
+
+
+
+        
+    </script>
+</body>
+</html>

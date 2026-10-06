@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>找下家</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/universal/logo.png">
+    <link rel="stylesheet" href="./css/Universal_style.css">
+    <link rel="stylesheet" href="./css/find_n.css">
+    <script src="./js/NavPerson_Style.js"></script>
+
+</head>
+
+<body>
+    <div class="topIndex">
+        <div class="brand_img">
+            <img src="./images/universal/logo.png" alt="有下家Logo">
+        </div>
+        <div class="IndexNav">
+            <div id="home">首页</div>
+            <div id="post">悬赏信息</div>
+            <div id="self-made">大神自制品</div>
+            <div id="search">
+                <input type="text" placeholder="请输入搜索内容" id="searchInput">
+                <button id="searchBtn">搜索</button>
+            </div>
+        </div>
+        <div id="AccountShow">
+            <div id="myPortrait">
+                <img src="./images/universal/initial.png" id="header-image" alt="头像">
+            </div>
+            <div id="myName">请登录</div>
+            
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div id="hint_word">
+            您可以在此找到您的宝贝中意的下家，或者发布悬赏信息寻找您想要的宝贝。
+        </div>
+        <div id="needs_container">
+
+            <div id="needs-box">
+                <div id="share-Needsimg">
+                    <img src="./images/universal/no-img.png" alt="分享需求">
+                </div>
+                <div id="share-Needstext">分享你的需求</div>
+                <div id="needs-realism">
+                    <div id="headerImg">
+                        <img src="./images/universal/initial.png" alt="头像">
+                    </div>
+                    <div id="touch">
+                        <div id="touch-name">用户名</div>
+                        <div id="touch-account">账号</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="add-my-need">
+        <img src="./images/universal/add.png" alt="添加需求">
+    </div>
+    <div id="addmyGoodsArea">
+        <div id="send-image-Area">
+            <input type="file" id="send-image" accept="image/*">
+        </div>
+        <textarea name="introduce" id="send-introduce" cols="50" rows="10" placeholder="描述你的需求"></textarea>
+        <div id="send-btn">发布</div>
+        <div id="cancel-btn">取消</div>
+    </div>
+    </div>
+    <script>
+
+        function showHeaderInSelfMade(num) { 
+
+            let personImageCode = num + ".jpg";
+
+                
+            let imageUrl = `http://localhost:8080/api/image/header/show?filename=${encodeURIComponent(personImageCode)}`;
+                
+            // console.log('尝试加载图片:', imageUrl);
+                    
+            return imageUrl;
+        };
+
+        function showAllNeeds() {
+            let xh = new XMLHttpRequest();
+            xh.open('POST', 'http://localhost:8080/api/need/showall', true);
+            xh.setRequestHeader('Content-Type', 'application/json');
+            xh.onreadystatechange = async () => {
+                if (xh.readyState === 4 && xh.status === 200) {
+                    try {
+                        let jsonData = JSON.parse(xh.responseText);
+                        if (Array.isArray(jsonData) && jsonData.length > 0) {
+                            const itemsWithNick = await Promise.all(
+                                jsonData.map(async (item) => {
+                                    try {
+                                        const nick = await findMessageByAccount(item.account);
+                                        return { ...item, nick: nick || '未知用户' };
+                                    } catch (e) {
+                                        return { ...item, nick: '未知用户' };
+                                    }
+                                })
+                            );
+
+                            let html = '';
+                            function showNeedImage(num)  {
+                                let personImageCode = num ;
+                                let imageUrl = `http://localhost:8080/api/image/need/show?filename=${encodeURIComponent(personImageCode)}`;
+                                // console.log('尝试加载图片:', imageUrl);
+                                return imageUrl;
+                            }
+                            itemsWithNick.forEach(item => {
+                                // console.log('item--------------Image:', item.image);
+                                html += `
+                                    <div id="needs-box">
+                                        <div id="share-Needsimg">
+                                            <img src="${showNeedImage(item.image)}.jpg" alt="分享需求">
+                                        </div>
+                                        <div id="share-Needstext">${item.description}</div>
+                                        <div id="needs-realism">
+                                            <div id="headerImg">
+                                                <img src="${showHeaderInSelfMade(item.account)}" alt="头像">
+                                            </div>
+                                            <div id="touch">
+                                                <div id="touch-name">${item.nick}</div>
+                                                <div id="touch-account">${item.account}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            document.getElementById("needs_container").innerHTML = html;
+                        } else {
+                            document.getElementById("needs_container").innerHTML = "无数据  · · · · · ·";
+                        }
+                    } catch (e) {
+                        console.error("JSON 解析失败:", e);
+                    }
+                }
+            };
+            xh.send();
+        }
+
+
+        
+
+        document.getElementById("add-my-need").addEventListener("click", () => {
+            /*添加商品*/
+            document.getElementById("addmyGoodsArea").style.display = "block";
+            
+            document.getElementById("send-btn").addEventListener("click", async () => {
+                const fileInput = document.getElementById("send-image");
+                const imagefile = fileInput.files[0];
+                if (!imagefile) {
+                    alert("请上传图片！");
+                    return;
+                }
+
+                // 步骤1: 将图片转为 JPG Blob
+                let jpgBlob;
+                try {
+                    jpgBlob = await convertImageToJPG(imagefile);
+                } catch (e) {
+                    console.error("图片转换失败:", e);
+                    alert("图片转换失败，请重试！");
+                    return;
+                }
+
+                // 步骤2: 显示预览（可选，使用转换后的 JPG）
+                const preview = document.getElementById('send-image-Area');
+                const previewUrl = URL.createObjectURL(jpgBlob);
+                preview.innerHTML = `<img id="preview-img" src="${previewUrl}" alt="预览图片" style="max-width: 100%; max-height: 300px;">`;
+
+                // 步骤3: 准备 FormData（使用转换后的 jpgBlob）
+                const filename = Date.now() + "_" + account + "_need.jpg"; // 显式加 .jpg 后缀
+                const formData = new FormData();
+                formData.append('data', filename.replace('.jpg', '')); // 如果后端不需要扩展名可去掉
+                formData.append('image', jpgBlob, filename); // 指定文件名为 .jpg
+
+                try {
+                    // 上传图片
+                    const response = await fetch('http://localhost:8080/api/image/need/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error('上传失败：' + response.statusText);
+                    const result = await response.json();
+                    console.log("上传成功，文件名:", result.filePath);
+
+                    // 发布需求（注意：这里 image 字段应与后端期望一致）
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'http://localhost:8080/api/need/add', true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.onreadystatechange = () => {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                try {
+                                    const jsonData = JSON.parse(xhr.responseText);
+                                    alert(jsonData.success ? "发布成功！" : "发布失败！");
+                                    if (jsonData.success) window.location.reload();
+                                } catch (e) {
+                                    console.error("JSON 解析失败:", e);
+                                }
+                            }
+                        }
+                    };
+
+                    xhr.send(JSON.stringify({
+                        account: account,
+                        description: document.getElementById("send-introduce").value,
+                        image: filename.replace('.jpg', ''), // 或根据后端要求调整
+                    }));
+
+                } catch (error) {
+                    console.error("上传错误:", error);
+                    alert("图片上传失败！");
+                }
+            });
+            document.getElementById("cancel-btn").addEventListener("click", () => {
+                document.getElementById("addmyGoodsArea").style.display = "none";
+            });
+        });
+
+
+        showAllNeeds();
+
+    </script>
+</body>
+
+</html>

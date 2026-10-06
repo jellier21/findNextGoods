@@ -1,0 +1,480 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.container{
+    width: 70%;
+    height: 90vh;
+    background-color: rgba(228, 211, 32, 0.8);
+    margin: 2vh auto;
+    padding: 1vh;
+    border-radius: 1vh;
+    display: grid;
+    grid-template-columns: 1fr 6fr;
+    grid-template-rows: 1fr;
+    gap: 1vh;
+}
+.container>div{
+    background-color: aquamarine;
+}
+
+#Nav-All{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr repeat(4, 1fr);
+    place-items: center;
+    gap: 1vh;
+}
+#Nav-All>#logo{
+    width: 90%;
+    height: 60%;
+    margin: 0 auto;
+}
+#logo img{
+    width: 100%;
+    height: 100%;
+}
+#item-issue,#item-reward,#item-contact,#Quit{
+    width: 90%;
+    height: 40%;
+    margin: 0 auto;
+    background-color: rgb(226, 240, 75);
+    font-weight: bolder;
+    font-size: 1.5vh;
+    text-align: center;
+    place-items: center;
+    display: grid;
+    cursor: pointer;
+    border-radius: 1vh;
+}
+
+#Quit{
+    background-color: rgb(0, 123, 255);
+    color: white;
+    font-size: 1.7vh;
+}
+
+#showArea {
+    background: url(../images/universal/logo.png) center/50% 50% no-repeat;
+    position: relative; /* 添加相对定位 */
+}
+
+#showArea > div {
+    position: relative;
+    z-index: 1; /* 确保内容在背景图之上 */
+    width: 100%;
+    height: 100%;
+    background-color: rgba(22, 174, 204, 0.8); /* 半透明背景，避免完全遮挡 */
+    display: none;
+}
+
+#backHome>img{
+    width: 5vh;
+    position: absolute;
+    top: 2vh;
+    left: 2vh;
+    cursor: pointer;
+}
+
+
+/* ===============<展示区域>============= */
+/* ======<我的发布区>============= */
+#issue-container{
+    width: 90%;
+    height: 80vh;
+    margin: 0 auto;
+    background-color: rgb(144, 255, 144);
+    border-radius: 1vh;
+    position: relative;
+    top: 5vh;
+    overflow: auto;
+}
+
+#my-one-issue{
+    width: 90%;
+    height: 30vh;
+    margin: 0 auto;
+    padding: 1vh;
+    background-color: rgb(230, 225, 225);
+    border-radius: 1vh;
+    position: relative;
+    top: 5vh;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 1vh;
+}
+#my-one-issue>div{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+}
+#issue-image{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+}
+#issue-image>img{
+    width: 100%;
+}
+#issue-title{
+    width: 50%;
+    height: 5vh;
+    margin: 1vh auto;
+    background-color: rgb(222, 222, 222);
+    border-radius: 1vh;
+    font-size: 2vh;
+    font-weight: bolder;
+    text-align: center;
+    line-height: 5vh;
+}
+#issue-description{
+    width: 90%;
+    height: 20vh;
+    margin: 0 auto;
+    padding: 1vh;
+    background-color: rgb(222, 222, 222);
+    border-radius: 1vh;
+    font-size: 1.5vh;
+    overflow-y: auto;
+}
+
+#issue-type,#issue-price{
+    width: 70%;
+    height: 7vh;
+    margin: 2vh auto;
+    background-color: rgb(172, 134, 9);
+    color: white;
+    border-radius: 1vh;
+    font-size:  3vh;
+    font-family: "宋体";
+    font-weight: bolder;
+    text-align: center;
+    place-items: center;
+    line-height: 7vh;
+    transition: all 0.3s ease;
+}
+#issue-delete{
+    width: 70%;
+    height: 7vh;
+    margin: 2vh auto;
+    background-color: rgb(79, 152, 255);
+    color: white;
+    border-radius: 1vh;
+    font-size:  3vh;
+    font-family: "宋体";
+    font-weight: bolder;
+    text-align: center;
+    place-items: center;
+    line-height: 7vh;
+    transition: all 0.3s ease;
+}
+#issue-delete:hover{
+    color: black;
+    background-color: rgb(255, 67, 67);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+/* #issue-type:hover,#issue-price:hover{
+    color: black;
+    background-color: rgb(255, 255, 0);
+    cursor: pointer;
+    transition: all 0.3s ease;
+} *//* ==================<我的发布Goods>================== */
+.myGoods{
+    width: 90%;
+    height: 30vh;
+    margin: 1vh auto;
+    background-color: white;
+    border-radius: 1vh;
+    position: relative;
+    top: 5vh;
+    display: grid;
+    grid-template-columns: 2fr 3fr 2fr;
+    grid-template-rows: 1fr;
+    gap: 1vh;
+}
+.showArea_g{
+    width: 100%;
+    height: 30vh;
+}
+
+.good-image-area{
+    width: 100%;
+    height: 25vh;
+    border-radius: 1vh;
+    background-color: antiquewhite;
+    display: grid;
+    place-items: center;
+}
+
+.good-image-area img {
+    display: none;
+    width: 100%;
+    height: auto;
+}
+
+.good-image-area img.active {
+    display: block;
+}
+
+.changeimg{
+    width: 100%;
+    height: 5vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+.changeimg div{
+    width: 100%;
+    height: 100%;
+    font-size: 3vh;
+    font-weight: bold;
+    text-align: center;
+    line-height: 5vh;
+    cursor: pointer;
+    color: rgb(52, 12, 88);
+}
+.good-info-area{
+    width: 100%;
+    height: 30vh;
+    background-color: antiquewhite;
+}
+.good-name{
+    width: 100%;
+    height: 5vh;
+    margin: 0 auto;
+    line-height: 5vh;
+    font-size: 2vh;
+    font-weight: bolder;
+    text-align: center;
+}
+.good-description{
+    width: 100%;
+    height: 25vh;
+    margin: 0 auto;
+    padding: 1vh;
+    background-color: rgb(163, 255, 212);
+    border-radius: 1vh;
+    font-size: 1.5vh;
+    overflow-y: auto;
+}
+.good-info_operation{
+    width: 100%;
+    height: 30vh;
+    background-color: rgb(233, 210, 255);
+}
+.good-type,.good-price{
+    width: 70%;
+    height: 6vh;
+    background-color: aquamarine;
+    margin: 1vh auto;
+    line-height: 6vh;
+    font-size: 3vh;
+    font-weight: bolder;
+    text-align: center;
+}
+.good-delete{
+    width: 70%;
+    height: 6vh;
+    background-color: rgb(255, 67, 67);
+    color: white;
+    margin: 1vh auto;
+    line-height: 6vh;
+    font-size: 3vh;
+    font-weight: bolder;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.good-delete:hover{
+    color: black;
+    background-color: rgb(255, 183, 16);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+/* ===============<我的需求区>============= */
+#reward-container{
+    width: 90%;
+    height: 80vh;
+    margin: 0 auto;
+    background-color: rgb(144, 255, 144);
+    border-radius: 1vh;
+    position: relative;
+    top: 5vh;
+    overflow: auto;
+}
+
+#my-one-reward{
+    width: 90%;
+    height: 30vh;
+    margin: 0 auto;
+    padding: 1vh;
+    background-color: rgb(255, 255, 255);
+    border-radius: 1vh;
+    position: relative;
+    top: 5vh;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr;
+    gap: 4vh;
+}
+#reward-image{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+}
+#reward-image>img{
+    width: 100%;
+}
+
+#reward-description{
+    width: 90%;
+    height: 20vh;
+    margin: 0 auto;
+    padding: 1vh;
+    background-color: rgb(222, 222, 222);
+    border-radius: 1vh;
+    font-size: 2vh;
+    overflow-y: auto;
+}
+#reward-delete{
+    width: 50%;
+    height: 5vh;
+    margin: 2vh auto;
+    background-color: rgb(79, 152, 255);
+    color: white;
+    border-radius: 1vh;
+    font-size:  3vh;
+    font-family: "宋体";
+    font-weight: bolder;
+    text-align: center;
+    place-items: center;
+    line-height: 5vh;
+    transition: all 0.3s ease;
+}
+#reward-delete:hover{
+    color: black;
+    background-color: rgb(255, 67, 67);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* 联系方式区域 */
+#contactArea{
+    width: 90%;
+    height: 7vh;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 1vh;
+    position: relative;
+    top: 10vh;
+    display: grid;
+    grid-template-columns: 2fr 4fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+#software{
+    width: 90%;
+    height: 5vh;
+    margin: 1vh auto;
+    background-color: rgb(144, 255, 144);
+    border-radius: 1vh;
+    font-size: 2vh;
+    font-weight: bolder;
+    text-align: center;
+    place-items: center;
+    line-height: 5vh;
+}
+
+#account-Num{
+    width: 90%;
+    height: 5vh;
+    margin: 1vh auto;
+    background-color: rgb(146, 245, 146);
+    border-radius: 1vh;
+    font-size: 2vh;
+    font-weight: bolder;
+    text-align: center;
+    place-items: center;
+    line-height: 5vh;
+}
+
+#change-account>img{
+    width: 3vh;
+    position: relative;
+    top: 2vh;
+    cursor: pointer;
+    left: 2vh;
+}
+
+#changeArea{
+    width: 50%;
+    height: 50vh;
+    border-radius: 1vh;
+    background-color: rgb(113, 255, 149);
+    position: relative;
+    top: 20vh;
+    margin: 0 auto;
+    display: none;
+}
+
+#newSoftware,#newAccountNum{
+    width: 80%;
+    height: 5vh;
+    margin: 3vh auto;
+    border-radius: 1vh;
+    font-size: 1.5vh;
+    padding-left: 1vh;
+    position: relative;
+    left: 10%;
+    outline: none;
+    border: none;
+}
+#newSoftware::placeholder,#newAccountNum::placeholder{
+    color: rgb(0, 0, 0);
+    outline: greenyellow;
+    border: yellow;
+    opacity: 0.5;
+}
+
+#confirmChange{
+    width: 80%;
+    height: 5vh;
+    margin: 3vh auto;
+    color: white;
+    background-color: rgb(13, 122, 165);
+    border-radius: 1vh;
+    font-size: 1.5vh;
+    font-weight: bolder;
+    text-align: center;
+    place-items: center;
+    position: relative;
+    left: 10%;
+    border: none;
+}
+#cancelChange{
+    width: 80%;
+    height: 5vh;
+    margin: 3vh auto;
+    color: white;
+    background-color: rgb(16, 165, 13);
+    border-radius: 1vh;
+    font-size: 1.5vh;
+    font-weight: bolder;
+    text-align: center;
+    place-items: center;
+    position: relative;
+    left: 10%;
+    border: none;
+}
+
+

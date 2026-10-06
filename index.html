@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>有下家</title>
+    <link rel="stylesheet" href="./css/index.css" />
+    <script src="./js/index.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="mainTital">欢迎使用<span>有下家</span>平台</div>
+        <div id="login">
+            <div class="title">登录</div>
+            <input type="text" placeholder="请输入您的账号" id="username_l" />
+            <input type="password" placeholder="请输入密码" id="password_l" />
+            <button id="loginBtn">登录</button>
+        </div>
+        <div id="register">
+            <div class="title">注册</div>
+            <input type="text" placeholder="请输入您要注册的用户名" id="nickname_r" />
+            <input type="text" placeholder="请输入您要注册的账号" id="account_r" />
+            <input type="password" placeholder="请输入密码" id="password_r" />
+            <input type="password" placeholder="请再次输入密码" id="confirm_password_r" />
+            <div id="captcha-container">
+                <canvas id="captchaCanvas" width="150" height="50"></canvas>
+                <button id="refreshBtn">刷新验证码</button>
+                <input type="text" id="captchaInput" placeholder="请输入验证码" />
+                <button id="submitBtn">提交验证</button>
+                <p id="errorMsg" style="color: red"></p>
+            </div>
+            <button id="registerBtn">注册</button>
+        </div>
+        <div class="switch-btn">
+            <span id="switchToRegister">没有账号？立即注册</span>
+            <span id="switchToLogin">已有账号？立即登录</span>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('captchaCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentCaptcha = '';
+
+        // 生成随机字符串
+        function generateCode(length = 6) {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // 排除易混淆字符
+            let code = '';
+            for (let i = 0; i < length; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        // 绘制验证码
+        function drawCaptcha() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 背景干扰
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 文本绘制
+            ctx.font = '30px Arial';
+            ctx.fillStyle = getRandomColor();
+            for (let i = 0; i < currentCaptcha.length; i++) {
+                ctx.save();
+                ctx.translate(25 + i * 20, 35); 
+                ctx.rotate((Math.random() * 0.4 - 0.2) * Math.PI);
+                ctx.fillText(currentCaptcha[i], 0, 0);
+                ctx.restore();
+            }
+
+            // 干扰线
+            for (let i = 0; i < 5; i++) {
+                ctx.strokeStyle = getRandomColor();
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.stroke();
+            }
+        }
+
+        // 随机颜色生成
+        function getRandomColor() {
+            return `#${Math.floor(Math.random() * 0x1000000).toString(16).padStart(6, '0')}`;
+        }
+        // 初始化
+        function init() {
+            currentCaptcha = generateCode();
+            drawCaptcha();
+            document.getElementById('refreshBtn').addEventListener('click', refresh);
+            document.getElementById('submitBtn').addEventListener('click', validate);
+        }
+
+        // 刷新验证码
+        function refresh() {
+            currentCaptcha = generateCode();
+            drawCaptcha();
+            document.getElementById('captchaInput').value = '';
+            document.getElementById('errorMsg').textContent = '';
+        }
+
+        // 验证逻辑
+        function validate() {
+            const userInput = document.getElementById('captchaInput').value.trim();
+            if (userInput === currentCaptcha) {
+                document.getElementById('errorMsg').textContent = '验证成功！';
+                document.getElementById('errorMsg').style.color = 'green';
+                console.log('验证码验证成功，准备提交注册信息~~~~~');
+                alert('验证成功！');
+                document.getElementById('captcha-container').style.display = 'none';
+                document.getElementById('registerBtn').style.display = 'block';
+                // 此处应添加服务器端验证逻辑
+            } else {
+                document.getElementById('errorMsg').textContent = '验证码错误，请重试！';
+                console.log('验证码验证失败，请重新输入验证码');
+                refresh();
+            }
+        }
+
+        // 页面加载时初始化
+        window.onload = init;
+    </script>
+</body>
+
+</html>

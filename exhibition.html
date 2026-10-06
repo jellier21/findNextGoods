@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>找下家</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/universal/logo.png">
+    <link rel="stylesheet" href="./css/exhibition.css">
+</head>
+<body>
+    <div id="ex-container">
+        <div id="ex-showArea">
+            <div id="showimages">
+                <div id="ex-images">
+                    <img src="./images/universal/no-img.png" id="imageSrc" alt="无图片">
+                </div>
+            </div>
+            <div id="des_Area">
+                <div id="ex-description">
+                    discription
+                </div>
+                <div id="ex-info">
+                    <div id="Good-name">商品名称</div>
+                    <div id="Good-price">价格</div>
+                    <div id="contact-type">联系方式</div>
+                    <div id="contact-account">账号</div>
+                </div>
+            </div>
+        </div>
+        <div id="hint-txt">
+            注意鉴别真假，谨慎鉴别避免受骗
+        </div>
+    </div>
+    <div id="backhome">
+        <img src="./images/universal/back.png" alt="返回大厅">
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const goodsId = urlParams.get('goodsId');
+
+        if (goodsId) {
+            console.log('接收到的商品 ID:', goodsId);
+            
+            // 转换为整数
+            const goodsIdInt = parseInt(goodsId, 10);
+            
+            if (isNaN(goodsIdInt)) {
+                console.error('无效的商品 ID');
+            }
+            
+            console.log('转换后的商品 ID:', goodsIdInt);
+            
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost:8080/api/goods/showonebyid', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = ()=> {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            var jsonData = JSON.parse(xhr.responseText); 
+                            console.log("Response data:", jsonData);
+                            console.log("联系平台响应数据：", jsonData.image); 
+                            document.getElementById("ex-description").innerHTML = jsonData.description;
+                            document.getElementById("Good-name").innerHTML = jsonData.name;
+                            document.getElementById("Good-price").innerHTML = jsonData.price;
+                            document.getElementById("ex-images").innerHTML = `
+                                <img src="http://localhost:8080/api/image/goods/show?filename=${encodeURIComponent(jsonData.image + ".jpg")}" alt="图片"></img>
+                            `;
+                            let user_account = jsonData.account;
+                            let xh = new XMLHttpRequest();
+                            xh.open('POST', 'http://localhost:8080/api/site/mysite', true);
+                            xh.setRequestHeader('Content-Type', 'application/json');
+                            xh.onreadystatechange = () => { 
+                                if (xh.readyState === 4) {
+                                    if (xh.status === 200) {
+                                        try {
+                                            var jsonDB = JSON.parse(xh.responseText);
+                                            document.getElementById("contact-type").innerHTML = jsonDB.SiteWay;
+                                            document.getElementById("contact-account").innerHTML = jsonDB.Location;
+                                            
+                                        } catch (e) {
+                                            console.error("JSON 解析失败:", e);
+                                        }
+                                    } else {
+                                            document.getElementById("contact-type").innerHTML = "未设置";
+                                            document.getElementById("contact-account").innerHTML = "未设置";
+                                    }
+                                }
+                            };
+                            
+                            xh.send(JSON.stringify({ Account: user_account }));
+
+                            
+                        } catch (e) {
+                            console.log('JSON 解析失败:', e);
+                        }
+                    } else {
+                        console.log('请求失败，状态码:', xhr.status);
+                    }
+                }
+            };
+
+            xhr.send(JSON.stringify({
+                id_r : goodsIdInt
+            }));
+        } else {
+            console.warn('未找到 goodsId 参数');
+        }
+
+
+        document.getElementById("backhome").addEventListener("click", () => {
+            window.location.href = "./homepage.html";
+        });
+
+
+        // // 图片切换功能
+        // const imageContainer = document.getElementById('ex-images');
+        // const images = imageContainer.querySelectorAll('img');
+        // let currentIndex = 0;
+
+        // function showImage(index) {
+        //     // 隐藏所有图片
+        //     images.forEach((img, i) => {
+        //         img.style.display = (i === index) ? 'block' : 'none';
+        //     });
+        // }
+
+        // // 初始化：显示第一张
+        // showImage(currentIndex);
+
+        // // 右箭头点击
+        // document.getElementById('Toright').addEventListener('click', () => {
+        //     currentIndex = (currentIndex + 1) % images.length;
+        //     showImage(currentIndex);
+        // });
+
+        // // 左箭头点击
+        // document.getElementById('Toleft').addEventListener('click', () => {
+        //     currentIndex = (currentIndex - 1 + images.length) % images.length;
+        //     showImage(currentIndex);
+        // });
+    </script>
+</body>
+</html>

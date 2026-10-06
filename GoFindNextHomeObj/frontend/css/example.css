@@ -1,0 +1,14 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+#container{ 
+    width: 70vh;
+    height: 70vh;
+    margin: 10vh auto;
+    padding: 1vh;
+    background-color: rgb(203, 203, 203);
+    overflow-y: auto;
+}
+

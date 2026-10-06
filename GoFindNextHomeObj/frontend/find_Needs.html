@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>找下家</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/universal/logo.png">
+    <link rel="stylesheet" href="./css/Universal_style.css">
+    <link rel="stylesheet" href="./css/find_n.css">
+    <script src="./js/NavPerson_Style.js"></script>
+
+</head>
+
+<body>
+    <div class="topIndex">
+        <div class="brand_img">
+            <img src="./images/universal/logo.png" alt="有下家Logo">
+        </div>
+        <div class="IndexNav">
+            <div id="home">首页</div>
+            <div id="post">悬赏信息</div>
+            <div id="self-made">大神自制品</div>
+            <div id="search">
+                <input type="text" placeholder="请输入搜索内容" id="searchInput">
+                <button id="searchBtn">搜索</button>
+            </div>
+        </div>
+        <div id="AccountShow">
+            <div id="myPortrait">
+                <img src="./images/universal/initial.png" alt="头像">
+            </div>
+            <div id="myName">请登录</div>
+            <div id="HoverItem">
+                <div id="myIssue">
+                    我的发布
+                </div>
+                <div id="myReward">
+                    我的悬赏
+                </div>
+                <div id="myContact">
+                    我的联系方式
+                </div>
+                <div id="backLogn">退出登录</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div id="hint_word">
+            您可以在此找到您的宝贝中意的下家，或者发布悬赏信息寻找您想要的宝贝。
+        </div>
+        <div id="needs_container">
+
+            <div id="needs-box">
+                <div id="share-Needsimg">
+                    <img src="./images/universal/no-img.png" alt="分享需求">
+                </div>
+                <div id="share-Needstext">分享你的需求</div>
+                <div id="needs-realism">
+                    <div id="headerImg">
+                        <img src="./images/universal/initial.png" alt="头像">
+                    </div>
+                    <div id="touch">
+                        <div id="touch-name">用户名</div>
+                        <div id="touch-account">账号</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="add-my-need">
+        <img src="./images/universal/add.png" alt="添加需求">
+    </div>
+    <div id="addmyGoodsArea">
+        <div id="send-image-Area">
+            <input type="file" id="send-image" accept="image/*">
+        </div>
+        <textarea name="introduce" id="send-introduce" cols="50" rows="10" placeholder="描述你的需求"></textarea>
+        <div id="send-btn">发布</div>
+        <div id="cancel-btn">取消</div>
+    </div>
+    </div>
+    <script>
+            function showAllNeeds() {
+            let xh = new XMLHttpRequest();
+            xh.open('POST', 'http://localhost:8080/api/need/showall', true);
+            xh.setRequestHeader('Content-Type', 'application/json');
+            xh.onreadystatechange = async () => {
+                if (xh.readyState === 4 && xh.status === 200) {
+                    try {
+                        let jsonData = JSON.parse(xh.responseText);
+                        if (Array.isArray(jsonData) && jsonData.length > 0) {
+                            const itemsWithNick = await Promise.all(
+                                jsonData.map(async (item) => {
+                                    try {
+                                        const nick = await findMessageByAccount(item.account);
+                                        return { ...item, nick: nick || '未知用户' };
+                                    } catch (e) {
+                                        return { ...item, nick: '未知用户' };
+                                    }
+                                })
+                            );
+
+                            let html = '';
+                            itemsWithNick.forEach(item => {
+                                html += `
+                                    <div id="needs-box">
+                                        <div id="share-Needsimg">
+                                            <img src="./images/universal/no-img.png" alt="分享需求">
+                                        </div>
+                                        <div id="share-Needstext">${item.description}</div>
+                                        <div id="needs-realism">
+                                            <div id="headerImg">
+                                                <img src="./images/universal/initial.png" alt="头像">
+                                            </div>
+                                            <div id="touch">
+                                                <div id="touch-name">${item.nick}</div>
+                                                <div id="touch-account">${item.account}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            document.getElementById("needs_container").innerHTML = html;
+                        } else {
+                            document.getElementById("needs_container").innerHTML = "无数据  · · · · · ·";
+                        }
+                    } catch (e) {
+                        console.error("JSON 解析失败:", e);
+                    }
+                }
+            };
+            xh.send();
+        }
+
+
+        document.getElementById("add-my-need").addEventListener("click", () => {
+            /*添加商品*/
+            document.getElementById("addmyGoodsArea").style.display = "block";
+            document.getElementById("send-btn").addEventListener("click", () => {
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', 'http://localhost:8080/api/need/add', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            try {
+                                let jsonData = JSON.parse(xhr.responseText);
+                                if (jsonData.success) {
+                                    alert("发布成功！");
+                                    window.location.reload();
+                                } else {
+                                    alert("发布失败！");
+                                }
+
+                            } catch (e) {
+                                console.error("JSON 解析失败:", e);
+                                console.log("原始响应文本:", xhr.responseText);
+                            }
+                        } else {
+                            console.error("请求失败，状态码:", xhr.status);
+                        }
+                    }
+                };
+
+                xhr.send(JSON.stringify({
+                    account: account,
+                    description: document.getElementById("send-introduce").value,
+                }));
+
+            });
+            document.getElementById("cancel-btn").addEventListener("click", () => {
+                document.getElementById("addmyGoodsArea").style.display = "none";
+            });
+        });
+
+        showAllNeeds();
+
+    </script>
+</body>
+
+</html>

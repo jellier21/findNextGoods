@@ -1,0 +1,214 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: rgb(255, 255, 207);
+}
+
+/*-------顶部导航栏-------------*/
+
+.topIndex{
+    width: 100%;
+    height: 10vh;
+    background-color: rgb(232, 232, 38);
+    display: grid;
+    grid-template-columns: 1fr 8fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.brand_img img{
+    width: 30%;
+    position: relative;
+    left: 2vw;
+    top: 2vh;
+    object-fit: cover;
+}
+
+.IndexNav{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 3fr;
+    grid-template-rows: 1fr;
+}
+
+.IndexNav>div{
+    text-align: center;
+    line-height: 10vh;
+    cursor: pointer;
+}
+#home,#post,#self-made{
+    font-size: 2vh;
+    font-weight: bold;
+    color: rgb(99, 79, 10);
+}
+
+#searchInput{
+    width: 60%;
+    height: 5vh;
+    border: none;
+    border-radius: 2vh 1vh 1vh 2vh;
+    padding-left: 1vh;
+    font-size: 1.5vh;
+}
+#searchInput:focus{
+    outline: none;
+}
+
+#searchBtn{
+    width: 10%;
+    height: 5vh;
+    border: none;
+    border-radius: 1vh 2vh 2vh 1vh;
+    background-color: rgb(54, 120, 235);
+    color: white;
+    font-size: 1.5vh;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#AccountShow{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 10vh 20vh;
+}
+
+#myPortrait{
+    width: 7vh;
+    height: 7vh;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    top: 1.5vh;
+    border: 1px solid rgb(107, 133, 16);
+}
+#myPortrait:hover{
+    cursor: pointer;
+}
+
+#myPortrait img{ 
+    width: 100%;
+}
+
+#myName{
+    color: rgb(7, 45, 69);
+    font-size: 1.7vh;
+    font-weight: bold;
+    position: relative;
+    top: 3vh;
+    right: 2.5vw;
+}
+
+#HoverItem{
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    border-radius: 1vh;
+    border: 0.1vh solid rgb(172, 199, 72);
+    background-color: white;
+    grid-column: 1/ span 2;
+    position: relative;
+    top: -2vh;
+    right: 6vh;
+    display: none;
+    overflow: hidden;
+}
+
+#HoverItem>div{
+    width: 100%;
+    height: 5vh;
+    transition: all 0.3s ease;
+}
+
+#myIssue,#myReward,#myContact{
+    width: 100%;
+    text-align: center;
+    line-height: 5vh;
+    color: rgb(7, 45, 69);
+    font-size: 1.5vh;
+    font-weight: bold;
+}
+
+#backLogn{
+    width: 100%;
+    text-align: center;
+    line-height: 5vh;
+    color: rgb(7, 45, 69);
+    font-size: 1.5vh;
+    font-weight: bold;
+}
+#HoverItem>div:hover{
+    background-color: rgb(189, 191, 148);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/*主体部分*/
+.container{
+    width: 70%;
+    margin: 0 auto;
+    padding: 0 1vh;
+    height: 90vh;
+    background-color: white;
+    overflow-y: auto;
+}
+
+/*添加图标*/
+#add-selfmade>img{
+    width: 10vh;
+    cursor: pointer;
+    position: fixed;
+    top: 30%;
+    right: 10%;
+}
+
+/*=================< 联系方式区 >=================*/
+#headerImg{
+    width: 7vh;
+    height: 7vh;
+    margin: 1vh auto;
+    background-color: aliceblue;
+    border-radius: 50%;
+    overflow: hidden;
+}
+#headerImg img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#touch{
+    width: 90%;
+    height: 20vh;
+    margin: 0 auto;
+    background-color: rgb(255, 255, 255);
+}
+
+#touch-name{
+    width: 90%;
+    height: 4vh;
+    margin: 2vh auto;
+    background-color: rgb(31, 164, 212);
+    border-radius: 1vh;
+    font-size: 2vh;
+    padding: 1vh;
+    text-align: center;
+    position: relative;
+    top: 2vh;
+}
+#touch-account{
+    width: 90%;
+    height: 4vh;
+    margin: 2vh auto;
+    background-color: rgb(37, 171, 208);
+    border-radius: 1vh;
+    font-size: 1.3vh;
+    padding: 1vh;
+    text-align: center;
+    position: relative;
+    top: 2vh;
+}

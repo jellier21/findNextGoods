@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>找下家</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/universal/logo.png">
+    <link rel="stylesheet" href="./css/Universal_style.css">
+    <link rel="stylesheet" href="./css/home.css">
+    <script src="./js/NavPerson_Style.js"></script>
+</head>
+<body>
+    <div class="topIndex">
+        <div class="brand_img">
+            <img src="./images/universal/logo.png" alt="有下家Logo">
+        </div>
+        <div class="IndexNav">
+            <div id="home">首页</div>
+            <div id="post">悬赏信息</div>
+            <div id="self-made">大神自制品</div>
+            <div id="search">
+                <input type="text" placeholder="请输入搜索内容" id="searchInput">
+                <button id="searchBtn">搜索</button>
+            </div>
+        </div>
+        <div id="AccountShow">
+            <div id="myPortrait">
+                <img src="./images/universal/initial.png" alt="头像">
+            </div>
+            <div id="myName">请登录</div>
+            <div id="HoverItem">
+                <div id="myIssue">
+                    我的发布
+                </div>
+                <div id="myReward">
+                    我的悬赏
+                </div>
+                <div id="myContact">
+                    我的联系方式
+                </div>
+                <div id="backLogn">退出登录</div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div id="filtrate">
+            <div id="synthesize"><span id="filtrate_title">综合</span></div>
+            <div id="New_Show"><span id="filtrate_title">新发布</span></div>
+            <div id="price"><span id="filtrate_title">价格</span></div>
+        </div>
+        <div id="gameArea">
+            <!-- 游戏区域 -->
+        </div>
+        <div id="showTheGoods">
+            <div id="simple-obj">
+                <div id="obj-image">
+                    <img src="./images/universal/no-img.png" alt="no image">
+                </div>
+                <div id="obj-name">商品名称</div>
+            </div>
+        </div>
+    </div>
+    <div id="add-my-goods">
+        <img src="./images/universal/add.png" alt="添加需求">
+    </div>
+    <div id="addmyGoodsArea">
+        <div id="send-image-Area">
+            <input type="file" id="send-image" accept="image/*">
+        </div>
+        <input type="text" id="send-title" placeholder="请输入商品名称">
+        <textarea id="send-introduce" name="introduce" cols="30" rows="10" placeholder="请输入商品描述"></textarea>
+        <input type="number" id="send-price" placeholder="请输入商品价格">
+        <div id="send-btn">发送</div>
+        <div id="cancel-btn">取消</div>
+        </div>
+    </div>
+    <script>
+        document.getElementById("add-my-goods").addEventListener('click',()=>{
+            document.getElementById("addmyGoodsArea").style.display = "block";
+        })
+        document.getElementById("cancel-btn").addEventListener('click',()=>{
+            document.getElementById("addmyGoodsArea").style.display = "none";
+        })
+        
+    </script>
+</body>
+</html>

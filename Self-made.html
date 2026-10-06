@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>找下家</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/universal/logo.png">
+    <link rel="stylesheet" href="./css/Universal_style.css">
+    <link rel="stylesheet" href="./css/self-made.css">
+    <script src="./js/NavPerson_Style.js"></script>
+</head>
+<body>
+    <div class="topIndex">
+        <div class="brand_img">
+            <img src="./images/universal/logo.png" alt="有下家Logo">
+        </div>
+        <div class="IndexNav">
+            <div id="home">首页</div>
+            <div id="post">悬赏信息</div>
+            <div id="self-made">大神自制品</div>
+            <div id="search">
+                <input type="text" placeholder="请输入搜索内容" id="searchInput">
+                <button id="searchBtn">搜索</button>
+            </div>
+        </div>
+        <div id="AccountShow">
+            <div id="myPortrait">
+                <img src="./images/universal/initial.png" id="header-image" alt="头像">
+            </div>
+            <div id="myName">请登录</div>
+            
+        </div>
+    </div>
+    <div class="container">
+        <div id="hint_word">
+            这是属于自制者的市场，如果你有独特的宝贝，或者你是一个热爱制作的玩家，那么这里就是你的舞台，欢迎来到大神自制品市场。
+        </div>
+        <div id="selfmade_container">
+            <div class="selfmade-box">
+                <div id="selfmade-img">
+                    <img src="./images/universal/worring.png" alt="分享需求">
+                </div>
+                <div id="selfmade-text">描述你的作品</div>
+                <div id="selfmade-realism">
+                    <div id="headerImg">
+                        <img src="./images/universal/initial.png" alt="头像">
+                    </div>
+                    <div id="touch">
+                        <div id="touch-name">用户名</div>
+                        <div id="touch-account">账号</div>
+                        <div id="work-Name">作品名</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="add-selfmade">
+        <img src="./images/universal/add.png" alt="添加自制品">
+    </div>
+    <div id="addmyMadeArea">
+        <div id="send-image-Area">
+            <input type="file" id="send-image" accept="image/*">
+        </div>
+        <input type="text" id="send-name" placeholder="请输入作品名称">
+        <textarea name="introduce" id="send-introduce" cols="50" rows="10" placeholder="描述你的作品"></textarea>
+        <input type="number" id="send-price" placeholder="请输入预计金额">
+        <div id="send-btn">发布</div>
+        <div id="cancel-btn">取消</div>
+    </div>
+
+    <script>
+        document.getElementById("add-selfmade").addEventListener("click", () => {
+        /*添加自制品*/
+            document.getElementById("addmyMadeArea").style.display = "block";
+            document.getElementById("send-btn").addEventListener("click", async () => {
+                const fileInput = document.getElementById("send-image");
+                const imagefile = fileInput.files[0];
+                if (!imagefile) {
+                    alert("请上传图片！");
+                    return;
+                }
+
+                // 步骤1: 将图片转为 JPG Blob
+                let jpgBlob;
+                try {
+                    jpgBlob = await convertImageToJPG(imagefile);
+                } catch (e) {
+                    console.error("图片转换失败:", e);
+                    alert("图片转换失败，请重试！");
+                    return;
+                }
+
+                // 步骤2: 显示预览（可选，使用转换后的 JPG）
+                const preview = document.getElementById('send-image-Area');
+                const previewUrl = URL.createObjectURL(jpgBlob);
+                preview.innerHTML = `<img id="preview-img" src="${previewUrl}" alt="预览图片" style="max-width: 100%; max-height: 300px;">`;
+
+                // 步骤3: 准备 FormData（使用转换后的 jpgBlob）
+                const filename = Date.now() + "_" + account + "_selfmade.jpg"; // 显式加 .jpg 后缀
+                const formData = new FormData();
+                formData.append('data', filename.replace('.jpg', '')); // 如果后端不需要扩展名可去掉
+                formData.append('image', jpgBlob, filename); // 指定文件名为 .jpg
+
+                try {
+                    // 上传图片
+                    const response = await fetch('http://localhost:8080/api/image/self/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) throw new Error('上传失败：' + response.statusText);
+                    const result = await response.json();
+                    console.log("上传成功，文件名:", result.filePath);
+
+                    // 发布需求（注意：这里 image 字段应与后端期望一致）
+                    let xh = new XMLHttpRequest();
+                    xh.open('POST', 'http://localhost:8080/api/selfmade/send', true);
+                    xh.setRequestHeader('Content-Type', 'application/json');
+                    xh.onreadystatechange = () => { 
+                        if (xh.readyState === 4) {
+                            if (xh.status === 200) {
+                                try {
+                                    var jsonDB = JSON.parse(xh.responseText);
+                                    if(jsonDB.success) {
+                                        alert("发布成功！");
+                                        document.getElementById("addmyMadeArea").style.display = "none";
+                                        window.location.reload();
+                                    } else {
+                                        alert("发布失败：" + jsonDB.message);
+                                    }
+                                } catch (e) {
+                                    console.error("JSON 解析失败:", e);
+                                    console.log("响应内容:", xh.responseText);
+                                }
+                            } else {
+                                alert("自制 api 返回失败：" + xh.status);
+                                console.error("请求失败，状态码:", xh.status);
+                                console.log("响应内容:", xh.responseText);
+                            }
+                        }
+                    };
+
+                    let sandtype = 1; // 1 代表自制品
+
+                    // 获取并转换价格
+                    let priceValue = document.getElementById("send-price").value;
+                    let priceFloat = parseFloat(priceValue);
+                    if (isNaN(priceFloat)) {
+                        alert("请输入有效的价格");
+                        return;
+                    }
+
+                    xh.send(JSON.stringify({ 
+                        account: account,
+                        name: document.getElementById("send-name").value,
+                        introduction: document.getElementById("send-introduce").value,
+                        price: priceFloat,
+                        type: sandtype,
+                        image: filename.replace('.jpg', '')
+                    }));
+
+                } catch (error) {
+                    console.error("上传错误:", error);
+                    alert("图片上传失败！");
+                }
+
+            });
+            document.getElementById("cancel-btn").addEventListener("click", () => {
+                document.getElementById("addmyMadeArea").style.display = "none";
+            });
+        });
+
+
+        function showHeaderInSelfMade(num) { 
+
+            let personImageCode = num + ".jpg";
+            let imageUrl = `http://localhost:8080/api/image/header/show?filename=${encodeURIComponent(personImageCode)}`;
+            // console.log('尝试加载图片:', imageUrl);
+            return imageUrl;
+        };
+
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:8080/api/selfmade/showallself', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = async () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                try {
+                    let jsonData = JSON.parse(xhr.responseText);
+                    if (Array.isArray(jsonData) && jsonData.length > 0) {
+                        // 先获取所有昵称
+                        const itemsWithNick = await Promise.all(
+                            jsonData.map(async (item) => {
+                                try {
+                                    const nick = await findMessageByAccount(item.account);
+                                    return { ...item, nick: nick || '未知用户' };
+                                } catch (e) {
+                                    return { ...item, nick: '未知用户' };
+                                }
+                            })
+                        );
+
+                        // 再统一渲染
+                        let html = '';
+                        function showSelfImage(num)  {
+                            let personImageCode = num ;
+                            let imageUrl = `http://localhost:8080/api/image/self/show?filename=${encodeURIComponent(personImageCode)}`;
+                            // console.log('尝试加载图片:', imageUrl);
+                            return imageUrl;
+                        }
+                        itemsWithNick.forEach(item => {
+                            html += `
+                                <div class="selfmade-box">
+                                    <div id="selfmade-img">
+                                        <img src="${showSelfImage(item.image)}.jpg" alt="分享自制">
+                                    </div>
+                                    <div id="selfmade-text">${item.introduction}</div>
+                                    <div id="selfmade-realism">
+                                        <div id="headerImg">
+                                            <img src="${showHeaderInSelfMade(item.account)}" alt="头像">
+                                        </div>
+                                        <div id="touch">
+                                            <div id="touch-name">${item.nick}</div>
+                                            <div id="touch-account">${item.account}</div>
+                                            <div id="work-Name">${item.name}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        document.getElementById("selfmade_container").innerHTML = html;
+                    } else {
+                        document.getElementById("selfmade_container").innerHTML = "无数据  · · · · · ·";
+                    }
+                } catch (e) {
+                    console.error("JSON 解析失败:", e);
+                }
+            }
+        };
+        
+        xhr.send();
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{ 
+    background-color: #f0f0f0;
+}
+
+#ex-container{
+    width: 60%;
+    height: 90vh;
+    margin: 5vh auto;
+    padding: 2vh;
+    border-radius: 3vh;
+    background-color: white;
+}
+#backhome>img{
+    width: 5vh;
+    position: absolute;
+    top: 2vh;
+    left: 2vh;
+    cursor: pointer;
+}
+#ex-showArea{
+    width: 100%;
+    height: 50vh;
+    padding: 1vh;
+    border-radius: 1vh;
+    background-color: rgb(234, 234, 234);
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr;
+    gap: 1vh;
+}
+#ex-images{
+    width: 100%;
+    height: 40vh;
+    border-radius: 1vh;
+    background-color: antiquewhite;
+    display: grid;
+    place-items: center;
+}
+#ex-images img {
+    display: none;
+    width: 100%; /* 或你设定的尺寸 */
+    height: auto;
+}
+#ex-images img:first-child {
+    display: block;
+}
+
+
+#op-img{
+    width: 100%;
+    height: 5vh;
+    border-radius: 1vh;
+    background-color: rgb(234, 234, 234);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+#op-img>div{
+    width: 100%;
+    height: 100%;
+    font-size: 3vh;
+    font-weight: bold;
+    text-align: center;
+    line-height: 5vh;
+    cursor: pointer;
+    color: blueviolet;
+}
+#des_Area{
+    width: 100%;
+    height: 48vh;
+    background-color: antiquewhite;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1vh;
+}
+#ex-description{
+    width: 100%;
+    height: 100%;
+    padding: 3vh;
+    background-color: WHITE;
+    border-radius: 1vh;
+}
+#ex-info{
+    width: 100%;
+    height: 100%;
+    padding: 1vh;
+    background-color: WHITE;
+    border-radius: 1vh;
+}
+
+#ex-info>div{
+    width: 90%;
+    height: 7vh;
+    margin: 1vh auto;
+    font-size: 2vh;
+    font-weight: bold;
+    line-height: 7vh;
+    text-align: center;
+    border-radius: 1vh;
+    background-color: rgb(254, 211, 155);
+}
+
+
+#hint-txt{
+    width: 100%;
+    height: 35vh;
+    margin: 1vh auto;
+    border-radius: 2vh;
+    line-height: 30vh;
+    text-align: center;
+    font-size: 4vh;
+    font-weight: bold;
+    color: black;
+    background-color: rgb(186, 185, 185);
+}

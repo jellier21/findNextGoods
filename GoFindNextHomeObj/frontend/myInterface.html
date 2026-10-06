@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/universal/logo.png">
+    <link rel="stylesheet" href="./css/myInterface.css">
+    <title>我的个人界面</title>
+    <script src="./js/myInterface.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="Nav-All">
+            <div id="logo">
+                <img src="./images/universal/logo.png" alt="logo">
+            </div>
+            <div id="item-issue">我的发布</div>
+            <div id="item-reward">我的悬赏</div>
+            <div id="item-contact">我的联系方式</div>
+            <div id="Quit">退出登录</div>
+        </div>
+        <div id="showArea">
+            <div id="show-issue">
+                <div id="issue-container">
+                    <div id="my-one-issue">
+                        <div id="issue-image">
+                            <img src="./images/universal/worring.png" alt="问题图片">
+                        </div>
+                        <div id="issue-info">
+                            <div id="issue-title">title</div>
+                            <div id="issue-description">description</div>
+                        </div>
+                        <div id="issue-operation">
+                            <div id="issue-type">自制</div>
+                            <div id="issue-price">666</div>
+                            <div id="issue-delete">删除</div>
+                        </div>
+                    </div>
+                    
+                    <!-- <div id="myGoods">
+                        <div id="showArea_g">
+                            <div id="good-image-area">
+                                <img src="./images/universal/no-img.png" alt="no img">
+                                <img src="./images/universal/worringImg.png" alt="">
+                            </div>
+                            <div id="changeimg">
+                                <div id="left">←</div>
+                                <div id="right">→</div>
+                            </div>
+                        </div>
+                        <div id="good-info-area">
+                            <div id="good-name">商品名</div>
+                            <div id="good-description">商品描述</div>
+                        </div>
+                        <div id="good-info_operation">
+                            <div id="good-type">type</div>
+                            <div id="good-price">价格</div>
+                            <div id="good-delete">删除</div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div id="show-reward">
+                <div id="reward-container">
+
+                    <div id="my-one-reward">
+                        <div id="reward-image">
+                            <img src="./images/universal/worring.png" alt="悬赏图片">
+                        </div>
+                        <div id="reward-info">
+                            <div id="reward-description">description</div>
+                            <div id="reward-delete">删除</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="show-contact">
+                <div id="contactArea">
+                    <div id="software">软件</div>
+                    <div id="account-Num">15194691234</div>
+                    <div id="change-account">
+                        <img src="./images/universal/amend.png" alt="修改">
+                    </div>
+                </div>
+                <div id="changeArea">
+                    <input type="text" id="newSoftware" placeholder="请输入新的联系软件">
+                    <input type="text" id="newAccountNum" placeholder="请输入新的账号">
+                    <button id="confirmChange">确认修改</button>
+                    <button id="cancelChange">取消修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="backHome">
+        <img src="./images/universal/back.png" alt="返回首页">
+    </div>
+    <script>
+        document.getElementById('Quit').addEventListener('click', () => {
+            localStorage.removeItem('userAccountNum');
+            localStorage.removeItem('userPassword');
+            location.replace('./homepage.html');
+        });
+        document.getElementById('backHome').addEventListener('click', () => {
+            location.replace('./homepage.html');
+        });
+
+
+
+        
+    </script>
+</body>
+</html>
